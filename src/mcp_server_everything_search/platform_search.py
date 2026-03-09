@@ -55,21 +55,6 @@ class LinuxSpecificParams(BaseModel):
         description="Only display count of matches (-c parameter)"
     )
 
-class WindowsSortOption(int, Enum):
-    """Sort options for Windows Everything search."""
-    NAME_ASC = 1
-    NAME_DESC = 2
-    PATH_ASC = 3
-    PATH_DESC = 4
-    SIZE_ASC = 5
-    SIZE_DESC = 6
-    EXT_ASC = 7
-    EXT_DESC = 8
-    CREATED_ASC = 11
-    CREATED_DESC = 12
-    MODIFIED_ASC = 13
-    MODIFIED_DESC = 14
-
 class WindowsSpecificParams(BaseModel):
     """Windows-specific search parameters for Everything SDK."""
     match_path: bool = Field(
@@ -88,9 +73,11 @@ class WindowsSpecificParams(BaseModel):
         default=False,
         description="Enable regex search"
     )
-    sort_by: WindowsSortOption = Field(
-        default=WindowsSortOption.NAME_ASC,
-        description="Sort order for results"
+    sort_by: int = Field(
+        default=1,
+        ge=1,
+        le=14,
+        description="Sort order for results: 1=name_asc, 2=name_desc, 3=path_asc, 4=path_desc, 5=size_asc, 6=size_desc, 7=ext_asc, 8=ext_desc, 11=created_asc, 12=created_desc, 13=modified_asc, 14=modified_desc"
     )
 
 class UnifiedSearchQuery(BaseSearchQuery):
