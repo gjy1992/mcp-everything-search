@@ -43,18 +43,64 @@ Examples:
 
 ```json
 {
-  "query": "*.py",
-  "max_results": 50,
-  "sort_by": 6
+    "base": {
+        "query": "readme.md",
+        "max_results": 3
+    },
+    "windows_params": {
+        "match_path": false
+    }
 }
 ```
 
+### Tool Call Examples for LLMs
+
+When constructing tool calls, the `base` key is **required** and must contain at least the `query` parameter:
+
+**Example 1 - Basic search:**
 ```json
 {
-  "query": "ext:py datemodified:today",
-  "max_results": 10
+  "base": {
+    "query": "qwen3",
+    "max_results": 50
+  }
 }
 ```
+
+**Example 2 - Search with Windows-specific parameters:**
+```json
+{
+  "base": {
+    "query": "ext:pdf datemodified:today",
+    "max_results": 100
+  },
+  "windows_params": {
+    "match_path": false,
+    "match_case": false,
+    "sort_by": 13
+  }
+}
+```
+
+**Example 3 - Case-sensitive path search:**
+```json
+{
+  "base": {
+    "query": "path:C:\\Projects README",
+    "max_results": 20
+  },
+  "windows_params": {
+    "match_path": true,
+    "match_case": true
+  }
+}
+```
+
+**Important Notes:**
+- The `base` key is **REQUIRED** and must contain at least the `query` parameter
+- `windows_params` is optional and only used on Windows platform
+- `sort_by` values: 1=name_asc, 2=name_desc, 3=path_asc, 4=path_desc, 5=size_asc, 6=size_desc, 7=ext_asc, 8=ext_desc, 11=created_asc, 12=created_desc, 13=modified_asc, 14=modified_desc
+
 
 Response includes:
 

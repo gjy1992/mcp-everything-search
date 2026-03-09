@@ -241,7 +241,11 @@ class EverythingSDK:
 
         for i in range(num_results):
             try:
-                self.dll.Everything_GetResultFullPathNameW(i, filename_buffer, 260)
+                try:
+                    self.dll.Everything_GetResultFullPathNameW(i, filename_buffer, 260)
+                except Exception as e:
+                    print(f"Debug: Error getting full path name for result {i}: {e}", file=sys.stderr)
+                    continue
                 
                 # Get timestamps
                 self.dll.Everything_GetResultDateCreated(i, date_created)
@@ -257,19 +261,44 @@ class EverythingSDK:
                 highlighted_filename = self.dll.Everything_GetResultHighlightedFileNameW(i)
                 highlighted_path = self.dll.Everything_GetResultHighlightedPathW(i)
 
-                results.append(SearchResult(
-                    path=filename_buffer.value,
-                    filename=filename,
-                    extension=extension,
-                    size=file_size.value,
-                    created=self._get_time(date_created.value).isoformat() if date_created.value else None,
-                    modified=self._get_time(date_modified.value).isoformat() if date_modified.value else None,
-                    accessed=self._get_time(date_accessed.value).isoformat() if date_accessed.value else None,
-                    attributes=attributes,
-                    run_count=run_count,
-                    highlighted_filename=highlighted_filename,
-                    highlighted_path=highlighted_path
-                ))
+                path=filename_buffer.value
+                # print (f"Debug: Path for result {i}: {path}", file=sys.stderr)
+                try:
+                    created=self._get_time(date_created.value).isoformat() if date_created.value else None
+                except Exception as e:
+                    # print(f"Debug: Error converting created time for result {i}: {e}", file=sys.stderr)
+                    created = None
+                # print (f"Debug: Created time for result {i}: {created}", file=sys.stderr)
+                try:
+                    modified=self._get_time(date_modified.value).isoformat() if date_modified.value else None
+                except Exception as e:
+                    # print(f"Debug: Error converting modified time for result {i}: {e}", file=sys.stderr)
+                    modified = None
+                # print (f"Debug: Modified time for result {i}: {modified}", file=sys.stderr)
+                try:
+                    accessed=self._get_time(date_accessed.value).isoformat() if date_accessed.value else None
+                except Exception as e:
+                    # print(f"Debug: Error converting accessed time for result {i}: {e}", file=sys.stderr)
+                    accessed = None
+                # print (f"Debug: Accessed time for result {i}: {accessed}", file=sys.stderr)
+
+                try:
+                    results.append(SearchResult(
+                        path=filename_buffer.value,
+                        filename=filename,
+                        extension=extension,
+                        size=file_size.value,
+                        created=self._get_time(date_created.value).isoformat() if date_created.value else None,
+                        modified=self._get_time(date_modified.value).isoformat() if date_modified.value else None,
+                        accessed=self._get_time(date_accessed.value).isoformat() if date_accessed.value else None,
+                        attributes=attributes,
+                        run_count=run_count,
+                        highlighted_filename=highlighted_filename,
+                        highlighted_path=highlighted_path
+                    ))
+                except Exception as e:
+                    # print(f"Debug: Error processing result {i}: {e}", file=sys.stderr)
+                    continue
             except Exception as e:
                 print(f"Debug: Error processing result {i}: {e}", file=sys.stderr)
                 continue

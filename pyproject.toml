@@ -1,5 +1,5 @@
 [project]
-name = "mcp-server-everything-search"
+name = "mcp-server-everything-search-gjy"
 version = "0.2.1"
 description = "A Model Context Protocol server providing fast file searching using Everything SDK"
 readme = "README.md"
@@ -19,11 +19,14 @@ dependencies = [
 ]
 
 [project.scripts]
-mcp-server-everything-search = "mcp_server_everything_search:main"
+mcp-server-everything-search-gjy = "mcp_server_everything_search:main"
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mcp_server_everything_search"]
 
 [tool.uv]
 dev-dependencies = [

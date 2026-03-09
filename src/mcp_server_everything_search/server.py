@@ -205,6 +205,38 @@ Examples:
 Current Implementation:
 {platform_info.get(current_platform, "Unknown platform")}
 
+Tool Call Examples:
+
+Example 1 - Basic search:
+User: "search for file or folder name qwen3"
+Tool call:
+{{
+  "base": {{
+    "query": "qwen3",
+    "max_results": 5
+  }}
+}}
+
+Example 2 - Search with Windows-specific parameters:
+User: "find pdf files modified today"
+Tool call:
+{{
+  "base": {{
+    "query": "ext:pdf datemodified:today",
+    "max_results": 10
+  }},
+  "windows_params": {{
+    "match_path": false,
+    "match_case": false,
+    "sort_by": 13
+  }}
+}}
+
+Important Notes:
+- The 'base' key is REQUIRED and must contain at least the 'query' parameter
+- 'windows_params' is optional and only used on Windows platform
+- Available sort_by values: 1=name_asc, 2=name_desc, 3=path_asc, 4=path_desc, 5=size_asc, 6=size_desc, 7=ext_asc, 8=ext_desc, 11=created_asc, 12=created_desc, 13=modified_asc, 14=modified_desc
+
 Search Syntax Guide:
 {syntax_docs.get(current_platform, "Platform-specific syntax guide not available")}
 """
